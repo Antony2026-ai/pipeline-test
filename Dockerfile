@@ -1,22 +1,11 @@
-FROM python:2.7
+FROM python:3.9-slim
 
-# Create app directory
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+WORKDIR /app
 
-# Install dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy application code
 COPY . .
 
-# Set environment variable
-ENV PORT=5000
+RUN pip install -r requirements.txt
 
-# Expose port
-EXPOSE 5000
+CMD ["gunicorn", "-b", "0.0.0.0:5000", "main:app"]
 
-# Run application (JSON format - best practice)
-CMD ["gunicorn", "-b", ":5000", "-c", "gunicorn.conf.py", "main:app"]
 
